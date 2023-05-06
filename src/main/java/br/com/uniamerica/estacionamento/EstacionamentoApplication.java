@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EstacionamentoApplication {
 
 	public static void main(String[] args) {
-		System.out.printf("teste");
+
 
 		SpringApplication.run(EstacionamentoApplication.class, args);
 	}
