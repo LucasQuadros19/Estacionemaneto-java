@@ -15,8 +15,8 @@ import java.util.List;
 @Repository
 public interface VeiculoRepository extends JpaRepository<Veiculo, Long> {
     @Modifying
-    @Query("UPDATE Condutor condutor SET condutor.ativo = false WHERE condutor.id = :idCondutor")
-    public void desativar(@Param("idCondutor") Long id);
+    @Query(value = "UPDATE veiculos  SET ativo = false WHERE id = :id",nativeQuery = true)
+    public void desativar(@Param("id") Long id);
 
     List<Veiculo> findByAtivo(boolean ativo);
 }

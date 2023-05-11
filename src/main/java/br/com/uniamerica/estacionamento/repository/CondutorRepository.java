@@ -1,6 +1,7 @@
 package br.com.uniamerica.estacionamento.repository;
 
 import br.com.uniamerica.estacionamento.Entity.Condutor;
+import br.com.uniamerica.estacionamento.Entity.Marca;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,9 +13,8 @@ import java.util.List;
 @Repository
 public interface CondutorRepository extends JpaRepository<Condutor, Long> {
     @Modifying
-    @Query("UPDATE Condutores condutor SET condutor.ativo = false WHERE condutor.id = :id")
+    @Query(value="UPDATE condutores SET ativo = false WHERE id = :id", nativeQuery = true)
     public void desativar(@Param("id") Long id);
 
-    @Query("SELECT Condutores FROM Condutores condutor WHERE condutor.ativo = true")
-    public List<Condutor> CondutoresAtivos();
+    List<Condutor> findByAtivo(boolean ativo);
 }

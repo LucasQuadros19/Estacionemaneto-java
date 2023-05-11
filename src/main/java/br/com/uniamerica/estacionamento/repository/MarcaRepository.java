@@ -13,8 +13,7 @@ import java.util.List;
 @Repository
 public interface MarcaRepository extends JpaRepository<Marca, Long> {
     List<Marca> findByAtivo(boolean ativo);
-    List<Marca> findByMarca(String marca);
     @Modifying
-    @Query("UPDATE Marca marca SET marca.ativo = false WHERE marca.id = :idMarca")
-    public void desativar(@Param("idMarca") Long id);
+    @Query(value = "UPDATE marcas SET ativo = false WHERE id = :id", nativeQuery = true)
+    public void desativar(@Param("id") Long id);
 }

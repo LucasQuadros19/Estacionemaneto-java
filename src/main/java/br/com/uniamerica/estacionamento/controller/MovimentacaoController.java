@@ -1,8 +1,12 @@
 package br.com.uniamerica.estacionamento.controller;
 
-import br.com.uniamerica.estacionamento.Entity.Modelo;
+import br.com.uniamerica.estacionamento.Entity.Condutor;
+import br.com.uniamerica.estacionamento.Entity.Movimentacao;
+import br.com.uniamerica.estacionamento.Entity.Movimentacao;
 import br.com.uniamerica.estacionamento.repository.ModeloRepository;
+import br.com.uniamerica.estacionamento.repository.MovimentacaoRepository;
 import br.com.uniamerica.estacionamento.service.ModeloService;
+import br.com.uniamerica.estacionamento.service.MovimentacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/movimentacao")
@@ -20,44 +25,54 @@ public class MovimentacaoController {
 
 
     @Autowired
-    private ModeloService Service;
+    private  MovimentacaoService Service;
 
     @Autowired
-    private ModeloRepository Repository;
+    private MovimentacaoRepository Repository;
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Modelo>> lista(){
-        List<Modelo> listartudo = Service.listartudo();
-        return ResponseEntity.ok(listartudo);
+    public ResponseEntity<List<Movimentacao>> lista(){
+        List<Movimentacao> listartud = Service.listaCompleta();
+        return ResponseEntity.ok(listartud);
     }
 
     @GetMapping("/lista/id/{id}")
     public ResponseEntity<?> listaId(@PathVariable(value = "id") Long id){
-        Modelo listarid = Repository.findById(id).orElse(null);
+        Movimentacao listarid = Repository.findById(id).orElse(null);
         return listarid == null
                 ? ResponseEntity.badRequest().body(" <<ERRO>>: valor nao encontrado.")
                 : ResponseEntity.ok(listarid);
     }
 
     @GetMapping("/lista/ativo/{ativo}")
-    public ResponseEntity<List<Modelo>> listaAtivo(@PathVariable boolean ativo) {
-        List<Modelo> listarAtivo = Repository.findByAtivo(ativo);
+    public ResponseEntity<List<Movimentacao>> listaAtivo(@PathVariable boolean ativo) {
+        List<Movimentacao> listarAtivo = Repository.findByAtivo(ativo);
         return ResponseEntity.ok(listarAtivo);
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<?> cadastrar(@RequestBody Modelo cadastro){
+    public ResponseEntity<?> cadastrar(@RequestBody Movimentacao cadastro){
         try{
             this.Service.cadastrar(cadastro);
             return ResponseEntity.ok("Cadastro feito com sucesso");
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("A Modelo já existe");
+            return ResponseEntity.badRequest().body("A Movimentacao já existe");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro:" + e.getStackTrace());
         }
     }
 
     @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteMarca(@PathVariable Long id){
+        Optional<Movimentacao> deletarId = Repository.findById(id);
+        if (deletarId.isPresent()) {
+            Repository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/delete/{id}")
     public ResponseEntity<?> desativar(
             @PathVariable Long idCondutor
     ){
@@ -68,7 +83,7 @@ public class MovimentacaoController {
     @PutMapping("/put/{id}")
     public ResponseEntity<?> atualizar(
             @PathVariable Long id,
-            @RequestBody Modelo atualizarId
+            @RequestBody Movimentacao atualizarId
     ) {
         try {
             this.Service.atualizar(id, atualizarId);

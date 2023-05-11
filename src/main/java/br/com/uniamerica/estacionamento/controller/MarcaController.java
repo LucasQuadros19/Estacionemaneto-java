@@ -66,6 +66,13 @@ public class MarcaController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping("/delete/{id}")
+    public ResponseEntity<?> desativar(
+            @PathVariable Long idCondutor
+    ){
+        this.marcaService.desativar(idCondutor);
+        return ResponseEntity.ok().body("desativado com sucesso!");
+    }
 
     @PutMapping("/put/{id}")
     public ResponseEntity<?> atualizar(

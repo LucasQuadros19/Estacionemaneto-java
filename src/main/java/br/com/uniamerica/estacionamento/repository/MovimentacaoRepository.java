@@ -1,5 +1,6 @@
 package br.com.uniamerica.estacionamento.repository;
 
+import br.com.uniamerica.estacionamento.Entity.Marca;
 import br.com.uniamerica.estacionamento.Entity.Movimentacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,10 +13,10 @@ import java.util.List;
 @Repository
 
 public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long> {
+    List<Movimentacao> findByAtivo(boolean ativo);
     @Modifying
-    @Query("UPDATE Movimentacoes movimentacao SET movimentacao.ativo = false WHERE movimentacao.id = :idMovimentacao")
-    public void desativar(@Param("idMovimentacao") Long id);
+    @Query(value = "UPDATE movimentacaos  SET ativo = false WHERE id = :id",nativeQuery = true)
+    public void desativar(@Param("id") Long id);
 
-    @Query("SELECT movimentacao FROM Movimentacoes movimentacao WHERE movimentacao.ativo = true")
-    public List<Movimentacao> MovimentacoesAtivas();
+
 }

@@ -1,6 +1,8 @@
 package br.com.uniamerica.estacionamento.controller;
 
 import br.com.uniamerica.estacionamento.Entity.Condutor;
+import br.com.uniamerica.estacionamento.Entity.Marca;
+import br.com.uniamerica.estacionamento.Entity.Modelo;
 import br.com.uniamerica.estacionamento.repository.CondutorRepository;
 import br.com.uniamerica.estacionamento.service.CondutorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/condutor")
 public class CondutorController {
-
-
-
-
 
     @Autowired
     private CondutorService Service;
@@ -40,7 +39,8 @@ public class CondutorController {
 
     @GetMapping("/lista/ativo/{ativo}")
     public ResponseEntity<List<Condutor>> listaAtivo(@PathVariable boolean ativo) {
-        return ResponseEntity.ok(this.Service.listaCondutoresAtivos());
+        List<Condutor> listarAtivo = Repository.findByAtivo(ativo);
+        return ResponseEntity.ok(listarAtivo);
     }
 
     @PostMapping("/cadastrar")
@@ -56,6 +56,16 @@ public class CondutorController {
     }
 
     @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteMarca(@PathVariable Long id){
+        Optional<Condutor> deletarId = Repository.findById(id);
+        if (deletarId.isPresent()) {
+            Repository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/delete/{id}")
     public ResponseEntity<?> desativar(
             @PathVariable Long idCondutor
     ){

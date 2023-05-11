@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "Movimentacaos",schema = "public")
+@Table(name = "movimentacaos",schema = "public")
 @Audited
 @AuditTable(value = "MovimentacaoAudit", schema = "audit")
 public class Movimentacao extends AbstractEntity{

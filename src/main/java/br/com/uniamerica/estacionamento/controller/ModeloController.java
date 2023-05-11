@@ -1,6 +1,7 @@
 package br.com.uniamerica.estacionamento.controller;
 
 
+import br.com.uniamerica.estacionamento.Entity.Marca;
 import br.com.uniamerica.estacionamento.Entity.Modelo;
 import br.com.uniamerica.estacionamento.repository.ModeloRepository;
 import br.com.uniamerica.estacionamento.service.ModeloService;
@@ -60,6 +61,16 @@ public class ModeloController {
     }
 
     @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteMarca(@PathVariable Long id){
+        Optional<Modelo> deletarId = Repository.findById(id);
+        if (deletarId.isPresent()) {
+            Repository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/delete/{id}")
     public ResponseEntity<?> desativar(
             @PathVariable Long idCondutor
     ){

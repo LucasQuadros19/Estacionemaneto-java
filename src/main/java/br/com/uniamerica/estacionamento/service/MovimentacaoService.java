@@ -49,7 +49,5 @@ public class MovimentacaoService {
         }
     }
 
-    public List<Movimentacao> listaMovimentacoesAtivas(){
-        return this.movimentacaoRepository.MovimentacoesAtivas();
-    }
+
 }

@@ -1,5 +1,6 @@
 package br.com.uniamerica.estacionamento.controller;
 
+import br.com.uniamerica.estacionamento.Entity.Condutor;
 import br.com.uniamerica.estacionamento.Entity.Veiculo;
 import br.com.uniamerica.estacionamento.repository.VeiculoRepository;
 import br.com.uniamerica.estacionamento.service.VeiculoService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/veiculo")
@@ -59,6 +61,16 @@ public class VeiculoController {
     }
 
     @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteMarca(@PathVariable Long id){
+        Optional<Veiculo> deletarId = Repository.findById(id);
+        if (deletarId.isPresent()) {
+            Repository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/delete/{id}")
     public ResponseEntity<?> desativar(
             @PathVariable Long idCondutor
     ){

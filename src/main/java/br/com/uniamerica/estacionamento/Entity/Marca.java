@@ -9,9 +9,9 @@ import org.hibernate.envers.Audited;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Marcas",schema = "public")
+@Table(name = "marcas",schema = "public")
 @Audited
-@AuditTable(value = "CondutoresAudit", schema = "audit")
+@AuditTable(value = "marcasaudit", schema = "audit")
 public class Marca extends AbstractEntity {
 
     @Getter

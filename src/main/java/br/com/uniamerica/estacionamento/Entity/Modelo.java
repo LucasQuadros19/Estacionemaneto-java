@@ -8,7 +8,7 @@ import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 @Entity
-@Table(name = "Modelos",schema = "public")
+@Table(name = "modelos",schema = "public")
 @Audited
 @AuditTable(value = "ModeloAudit", schema = "audit")
 public class Modelo extends AbstractEntity {

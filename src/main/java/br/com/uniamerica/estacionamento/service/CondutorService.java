@@ -24,12 +24,28 @@ public class CondutorService {
         }else if(ValidarTelefone.telefoneValido(condutor.getTelefone()) == false){
             throw new RuntimeException("Telefone invalido: " + condutor.getTelefone());
         }
+        if (condutor.getNome() == null || condutor.getNome().isEmpty()) {
+            throw new RuntimeException("Insira um nome para o condutor");
+        }
+        if (condutor.getCpf() == null || condutor.getCpf().isEmpty()) {
+            throw new RuntimeException("Insira um CPF para o condutor");
+        }
+        if (condutor.getTelefone() == null || condutor.getTelefone().isEmpty()) {
+            throw new RuntimeException("Insira um telefone para o condutor");
+        }
+        if (condutor.getCpf().length() > 15) {
+            throw new RuntimeException("O CPF do condutor excedeu o limite de 15 caracteres, confirme se o CPF esta correto");
+        }
+        if (condutor.getTelefone().length() > 17) {
+            throw new RuntimeException("O numero de telefone do condutor excedeu o limite de caracteres, confirme se o seu numero esta correto");
+        }
+        if (condutor.getNome().length() > 100) {
+            throw new RuntimeException("O nome do condutor excedeu o limite de caracteres, por favor altere seu nome");
+        }
         else {
             return this.condutorRepository.save(condutor);
         }
     }
-
-
     public List<Condutor> listaCompleta() {
         return this.condutorRepository.findAll();
     }
@@ -58,7 +74,5 @@ public class CondutorService {
         }
     }
 
-    public List<Condutor> listaCondutoresAtivos(){
-        return this.condutorRepository.CondutoresAtivos();
-    }
+
 }
