@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Audited
 @AuditTable(value = "marcasaudit", schema = "audit")
 public class Marca extends AbstractEntity {
-
     @Getter
     @Setter
     @Column(name="marca",nullable=false)

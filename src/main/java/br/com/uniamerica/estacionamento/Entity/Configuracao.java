@@ -46,4 +46,5 @@ public class Configuracao extends AbstractEntity {
     @Column(name="Vagas_vam",nullable=false)
     private int VagasVam;
 
+
 }

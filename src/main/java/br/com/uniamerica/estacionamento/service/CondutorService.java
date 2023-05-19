@@ -18,7 +18,7 @@ public class CondutorService {
     private CondutorRepository condutorRepository;
 
     @Transactional
-    public Condutor cadastrar(Condutor condutor) {
+    public Condutor cadastrar2(Condutor condutor) {
         if(condutor.getNome().trim().isBlank() || ValidaCpf.isCPF(condutor.getCpf()) == false) {
             throw new RuntimeException("Cpf invalido: " + condutor.getCpf());
         }else if(ValidarTelefone.telefoneValido(condutor.getTelefone()) == false){
@@ -44,6 +44,14 @@ public class CondutorService {
         }
         else {
             return this.condutorRepository.save(condutor);
+        }
+    }
+    @Transactional
+    public Condutor cadastrar(Condutor con) {
+        if(con.getNome().trim().isEmpty()){
+            throw  new RuntimeException("Erro: marca nula!!");
+        }else{
+            return this.condutorRepository.save(con);
         }
     }
     public List<Condutor> listaCompleta() {
