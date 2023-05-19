@@ -1,20 +1,21 @@
 package br.com.uniamerica.estacionamento.Entity;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "marcas",schema = "public")
+@Audited
+@AuditTable(value = "marcasaudit", schema = "audit")
 public class Marca extends AbstractEntity {
-    private String marca;
+    @Getter
+    @Setter
+    @Column(name="marca",nullable=false)
+    private String nome;
 
-    public Marca(LocalDateTime cadastro, LocalDateTime edicao, boolean ativo, String marca) {
-        super(cadastro, edicao, ativo);
-        this.marca = marca;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
 }

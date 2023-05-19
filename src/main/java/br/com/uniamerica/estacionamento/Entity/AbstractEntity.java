@@ -1,38 +1,32 @@
 package br.com.uniamerica.estacionamento.Entity;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
-
+@MappedSuperclass
 public abstract class AbstractEntity {
-    LocalDateTime Cadastro;
-    LocalDateTime edicao;
-    boolean ativo;
-
-    public AbstractEntity(LocalDateTime cadastro, LocalDateTime edicao, boolean ativo) {
-        Cadastro = cadastro;
-        this.edicao = edicao;
-        this.ativo = ativo;
+    @Id 
+    @Getter @Setter
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id",nullable=false,unique=true)
+    private Long id;
+    @Getter @Setter
+    @Column(name="dtCadastro",nullable=false)
+    private LocalDateTime cadastro;
+    @Getter @Setter
+    @Column(name="dtEdicao")
+    private LocalDateTime edicao;
+    @Getter @Setter
+    @Column(name="ativo",nullable=false)
+    private boolean ativo;
+    @PrePersist
+    private void prePersist(){
+        this.cadastro = LocalDateTime.now();
+        this.ativo = true;
     }
-
-    public LocalDateTime getCadastro() {
-        return Cadastro;
-    }
-
-    public void setCadastro(LocalDateTime cadastro) {
-        Cadastro = cadastro;
-    }
-
-    public LocalDateTime getEdicao() {
-        return edicao;
-    }
-
-    public void setEdicao(LocalDateTime edicao) {
-        this.edicao = edicao;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
+    @PreUpdate
+    private void preUpdate(){
+        this.edicao = LocalDateTime.now();
     }
 }
