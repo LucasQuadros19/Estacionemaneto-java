@@ -44,16 +44,15 @@ public class CondutorController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<?> cadastrar(@RequestBody Condutor cadastro){
+    public ResponseEntity<?> cadastrar (@RequestBody final Condutor condutor){
         try{
-            this.Service.cadastrar(cadastro);
-            return ResponseEntity.ok("Cadastro feito com sucesso");
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("A Condutor já existe");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro:" + e.getStackTrace());
+            this.Service.cadastrar(condutor);
+            return ResponseEntity.ok("Salvo com sucesso");
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body("error " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMarca(@PathVariable Long id){

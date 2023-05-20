@@ -112,7 +112,65 @@ public class MovimentacaoService {
         }
 
     }
+    /*
+    public List<Movimentacao> listaMovimentacoesAtivas(){
+        return this.movimentacaoRepository.MovimentacoesAtivas();
+    }
+
+    public void ControleMovimentacaoEntrada(){
+        Movimentacao movimentacao = new Movimentacao();
+        movimentacao.setEntrada(LocalDateTime.now());
+        int horas,minutos,segundos,dias;
+
+        System.out.println(movimentacao.getEntrada());
 
 
+        dias = movimentacao.getEntrada().getDayOfMonth();
+        horas = movimentacao.getEntrada().getHour();
+        minutos = movimentacao.getEntrada().getMinute();
+        segundos = movimentacao.getEntrada().getSecond();
+
+
+
+        if(minutos > 60){
+            horas = horas + 1;
+            minutos =0;
+        }
+
+        System.out.println("Dia: " + dias);
+        System.out.println("Hora: " + horas);
+        System.out.println("Minuto: " + minutos);
+        System.out.println("Segundo: " + segundos);
+
+        System.out.println("Saida");
+
+        int horasSaida,minutosSaida,segundosSaida,diasSaida;
+
+        movimentacao.setSaida(LocalDateTime.now());
+
+        diasSaida = movimentacao.getSaida().getDayOfMonth();
+        horasSaida = movimentacao.getSaida().getHour();
+        minutosSaida = movimentacao.getSaida().getMinute();
+        segundosSaida = movimentacao.getSaida().getSecond();
+
+        horasSaida = horasSaida +3;
+
+        minutosSaida = minutosSaida + 45;
+
+        if(minutosSaida > 59){
+            horasSaida = horasSaida + 1;
+            minutosSaida =0;
+        }
+
+        int horasfinais = horasSaida - horas;
+        int minutosfinais = minutosSaida - minutos;
+        System.out.println("Horas: " + horasfinais + " Minutos: "+ minutosfinais);
+    }
+
+
+}
+
+
+     */
 
 }
