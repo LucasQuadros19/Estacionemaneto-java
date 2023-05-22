@@ -15,4 +15,8 @@ public interface MarcaRepository extends JpaRepository<Marca, Long> {
     List<Marca> findByAtivo(boolean ativo);
     @Query("from Modelo where marca = :marca")
     public List<Modelo> findModelo (@Param("marca") final Marca marca);
+
+    @Query("SELECT COUNT(m) FROM Marca m WHERE m.nome = :nome")
+    public int countByNome(@Param("nome") String nome);
+
 }

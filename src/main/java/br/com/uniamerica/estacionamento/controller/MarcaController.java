@@ -1,5 +1,6 @@
 package br.com.uniamerica.estacionamento.controller;
 import br.com.uniamerica.estacionamento.Entity.Marca;
+import br.com.uniamerica.estacionamento.Entity.Modelo;
 import br.com.uniamerica.estacionamento.repository.MarcaRepository;
 import br.com.uniamerica.estacionamento.service.MarcaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ public class MarcaController {
         List<Marca> listarAtivo = marcaRepository.findByAtivo(ativo);
         return ResponseEntity.ok(listarAtivo);
     }
-
     @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrar(@RequestBody Marca cadastro){
         try{
@@ -47,24 +47,26 @@ public class MarcaController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMarca(@PathVariable Long id){
+    public ResponseEntity<String> deleteMarca(@PathVariable Long id) {
         Optional<Marca> deletarId = marcaRepository.findById(id);
         if (deletarId.isPresent()) {
             marcaRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Apagado com sucesso");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/put/{id}")
-    public ResponseEntity<?> editar (@RequestParam("id") final Long id, @RequestBody final Marca marca){
-        try{
-            this.marcaService.atualizar(id,marca);
-            return ResponseEntity.ok().body("Salvo com sucesso");
-        }catch(DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError().body("Error " + e.getCause().getCause().getMessage());
-        }catch(RuntimeException e){
-            return  ResponseEntity.internalServerError().body("Error " + e.getMessage());
+
+    @PutMapping("/put/id/{id}")
+    public ResponseEntity<?> atualizar(
+            @PathVariable Long id,
+            @RequestBody Marca atualizarId
+    ) {
+        try {
+            this.marcaService.atualizar(id, atualizarId);
+            return ResponseEntity.ok().body(" atualizado com sucesso!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
