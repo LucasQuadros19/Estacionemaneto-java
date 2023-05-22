@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface MarcaRepository extends JpaRepository<Marca, Long> {
     List<Marca> findByAtivo(boolean ativo);
-    @Modifying
-    @Query(value = "UPDATE marcas SET ativo = false WHERE id = :id", nativeQuery = true)
-    public void desativar(@Param("id") Long id);
+    @Query("from Modelo where marca = :marca")
+    public List<Modelo> findModelo (@Param("marca") final Marca marca);
 }
