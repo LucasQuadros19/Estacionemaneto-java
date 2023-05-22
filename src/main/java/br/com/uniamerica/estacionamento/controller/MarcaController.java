@@ -40,9 +40,9 @@ public class MarcaController {
             this.marcaService.cadastrar(cadastro);
             return ResponseEntity.ok("Cadastro feito com sucesso");
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("A marca já existe");
+            return ResponseEntity.badRequest().body("ERRO:"+e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro:" + e.getStackTrace());
+            return ResponseEntity.badRequest().body("Erro: A marca já existe");
         }
     }
 
@@ -58,10 +58,7 @@ public class MarcaController {
     }
 
     @PutMapping("/put/id/{id}")
-    public ResponseEntity<?> atualizar(
-            @PathVariable Long id,
-            @RequestBody Marca atualizarId
-    ) {
+    public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Marca atualizarId) {
         try {
             this.marcaService.atualizar(id, atualizarId);
             return ResponseEntity.ok().body(" atualizado com sucesso!");

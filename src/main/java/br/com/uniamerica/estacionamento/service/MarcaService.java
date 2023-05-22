@@ -32,10 +32,13 @@ public class MarcaService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void atualizar(Long id, Marca marca) {
+    public void   atualizar(Long id, Marca marca) {
         final Marca marcaBanco = this.marcaRepository.findById(marca.getId()).orElse(null);
         Assert.isTrue(marcaBanco.getId().equals(id) ,"Error id da URL diferente do body");
-        Assert.isTrue(marcaBanco == null && !marcaBanco.getId().equals(marca.getId()),"nao foi possivel identificar o registro");
+
+
+        // pq isso nao da ceto
+        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(marca.getId()),"nao foi possivel identificar o registro");
         this.marcaRepository.save(marca);
     }
 
