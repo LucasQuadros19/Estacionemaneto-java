@@ -16,13 +16,9 @@ public class ModeloService {
     }
     @Transactional(rollbackFor = Exception.class)
     public Modelo cadastrar(Modelo cadastrar) {
-        if (cadastrar.getNome() == null || cadastrar.getNome().isEmpty()) {
-            throw new IllegalArgumentException("Error: nome vazio");
-        }
+        Assert.isTrue(cadastrar.getNome() != null && !cadastrar.getNome().isEmpty(), "Error: nome vazio");
         int count = this.modeloRepository.countByNome(cadastrar.getNome());
-        if (count > 0) {
-            throw new RuntimeException("Erro: O modelo já existe");
-        }
+        Assert.isTrue(count == 0, "Erro: A modelo já existe");
         return this.modeloRepository.save(cadastrar);
     }
     @Transactional(rollbackFor = Exception.class)
