@@ -22,7 +22,7 @@ public class Condutor extends AbstractEntity {
     @Column(name="cpf",nullable=false,unique=true,length=15)
     private  String cpf;
     @Getter @Setter
-    @Column(name="telefone",nullable=false,length=16)
+    @Column(name="telefone",nullable=false,length=21)
     private String telefone;
     @Getter @Setter
     @Column(name="tempo_pago")

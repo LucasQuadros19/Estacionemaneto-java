@@ -40,7 +40,7 @@ public class MarcaController {
             this.marcaService.cadastrar(cadastro);
             return ResponseEntity.ok("Cadastro feito com sucesso");
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("ERRO:"+e.getMessage());
+            return ResponseEntity.badRequest().body("ERRO: erro na integridade"+e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

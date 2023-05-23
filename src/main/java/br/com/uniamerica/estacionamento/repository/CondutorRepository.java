@@ -17,7 +17,6 @@ public interface CondutorRepository extends JpaRepository<Condutor, Long> {
     public void desativar(@Param("id") Long id);
 
     List<Condutor> findByAtivo(boolean ativo);
-    //buscando da forma customizada
     @Query("from Condutor where cpf = :cpf AND id != :id")
     public List<Condutor> findCpf(@Param("cpf") final String cpf,@Param("id")final Long id);
 

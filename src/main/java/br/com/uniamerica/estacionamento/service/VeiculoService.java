@@ -23,7 +23,7 @@ public class VeiculoService {
         Assert.isTrue(count == 0, "<Erro> A placa já existe");
         Assert.isTrue(cadastrar.getPlaca().matches(regexPlaca), "Error: A placa está errada");
         Assert.isTrue(cadastrar.getPlaca().length() < 10, "Error: Placa ultrapassou o limite máximo de caracteres (10)");
-        Assert.isTrue(cadastrar.getAno() > 1990 && cadastrar.getAno() <= 2023, "Error: O ano do carro está fora do intervalo permitido");
+        Assert.isTrue(cadastrar.getAno() > 1990 && cadastrar.getAno() <= 2023, "Error: Ano errado");
         return this.Repository.save(cadastrar);
     }
 
