@@ -15,15 +15,15 @@ import java.time.LocalDateTime;
 public class Veiculo extends AbstractEntity {
     @Getter
     @Setter
-    @Column(name="placa",nullable=false,unique = true,length=7)
+    @Column(name="placa",nullable=false,unique = true,length=10)
     private String placa;
+    @Getter
+    @Setter
+    @Column(name="ano",nullable=false)
+    private int ano;
     @Getter
     @Setter
     @ManyToOne
     @JoinColumn(name="Veiculo_modelo",nullable=false)
     private Modelo modelo;
-    @Getter
-    @Setter
-    @Column(name="ano",nullable=false)
-    private int ano;
 }

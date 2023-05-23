@@ -19,13 +19,9 @@ public class MarcaService {
     }
     @Transactional(rollbackFor = RuntimeException.class)
     public Marca cadastrar(Marca marca) {
-        if (marca.getNome() == null || marca.getNome().isEmpty()) {
-            throw new IllegalArgumentException("Error: nome vazio");
-        }
+        Assert.isTrue(marca.getNome() != null && !marca.getNome().isEmpty(), "Error: nome vazio");
         int count = this.marcaRepository.countByNome(marca.getNome());
-        if (count > 0) {
-            throw new RuntimeException("Erro: A marca já existe");
-        }
+        Assert.isTrue(count == 0, "Erro: A marca já existe");
         return this.marcaRepository.save(marca);
     }
     @Transactional(rollbackFor = Exception.class)
@@ -45,20 +41,15 @@ public class MarcaService {
     @Transactional(rollbackFor = Exception.class)
     public void deletar(final Marca marca) {
         final Marca marcaBanco = this.marcaRepository.findById(marca.getId()).orElse(null);
-
         List<Modelo> modeloLista = this.marcaRepository.findModelo(marcaBanco);
-
         if (modeloLista.isEmpty()) {
             this.marcaRepository.delete(marcaBanco);
-            System.out.println("ola1");
         } else {
             for (Modelo modelo : modeloLista) {
-                modelo.setMarca(null); // Remover a referência da marca no modelo
                 this.modeloRepository.delete(modelo);
                 System.out.println("Modelo apagado: " + modelo.getId());
             }
             this.marcaRepository.delete(marcaBanco);
-            System.out.println("ola2");
         }
     }
 

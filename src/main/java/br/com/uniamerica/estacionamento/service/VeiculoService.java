@@ -1,46 +1,41 @@
 package br.com.uniamerica.estacionamento.service;
-
+import br.com.uniamerica.estacionamento.Entity.Modelo;
 import br.com.uniamerica.estacionamento.Entity.Veiculo;
 import br.com.uniamerica.estacionamento.repository.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.List;
-
 @Service
 public class VeiculoService {
-
     @Autowired
-    private VeiculoRepository veiculoRepository;
-
-
+    private VeiculoRepository Repository;
     public List<Veiculo> listartudo(){
-
-        return this.veiculoRepository.findAll();
+        return this.Repository.findAll();
     }
-    @Transactional
+    private final String regexPlaca = "^[a-zA-Z]{4}-\\d{4}$";
+    @Transactional(rollbackFor = Exception.class)
     public Veiculo cadastrar(Veiculo cadastrar) {
-        return this.veiculoRepository.save(cadastrar);
-    }
-    @Transactional
-    public void atualizar(Long id, Veiculo atualizar) {
-        if(id == atualizar.getId()) {
-            this.veiculoRepository.save(atualizar);
-        } else {
-            throw new RuntimeException();
-        }
+        Assert.isTrue(cadastrar.getPlaca() != null && !cadastrar.getPlaca().isEmpty(), "Error: nome vazio");
+        int count = this.Repository.countByplaca(cadastrar.getPlaca());
+        Assert.isTrue(count == 0, "Erro: A placa já existe");
+        Assert.isTrue(cadastrar.getPlaca().matches(regexPlaca), "Error: A placa está errada");
+        Assert.isTrue(cadastrar.getPlaca().length() < 10, "Error: Placa ultrapassou o limite máximo de caracteres (10)");
+        Assert.isTrue(cadastrar.getAno() > 1990 && cadastrar.getAno() <= 2023, "Error: O ano do carro está fora do intervalo permitido");
+        return this.Repository.save(cadastrar);
     }
 
-    @Transactional
-    public void desativar(Long id){
-        var Veiculo = this.veiculoRepository.findById(id);
-        if (id == Veiculo.get().getId()) {
-            this.veiculoRepository.desativar(id);
-        }
-        else {
-            throw new RuntimeException();
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public void atualizar(Long id, Veiculo atualizar) {
+        final Veiculo marcaBanco = this.Repository.findById(atualizar.getId()).orElse(null);
+        Assert.isTrue(marcaBanco.getId().equals(id) ,"Error id da URL diferente do body");
+
+
+        // pq isso nao da ceto
+        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(atualizar.getId()),"nao foi possivel identificar o registro");
+        this.Repository.save(atualizar);
     }
 
 
