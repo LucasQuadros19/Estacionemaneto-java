@@ -15,8 +15,9 @@ import java.util.List;
 public interface ModeloRepository extends JpaRepository<Modelo, Long> {
     List<Modelo> findByAtivo(boolean ativo);
 
-    @Modifying
-    @Query(value = "UPDATE modelos  SET ativo = false WHERE id = :id",nativeQuery = true)
-    public void desativar(@Param("id") Long id);
+    @Query("SELECT COUNT(m) FROM Modelo m WHERE m.nome = :nome")
+    public int countByNome(@Param("nome") String nome);
+
+    void delete(Modelo modelo);
 
 }

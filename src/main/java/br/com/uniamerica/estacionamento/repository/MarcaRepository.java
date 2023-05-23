@@ -19,4 +19,5 @@ public interface MarcaRepository extends JpaRepository<Marca, Long> {
     @Query("SELECT COUNT(m) FROM Marca m WHERE m.nome = :nome")
     public int countByNome(@Param("nome") String nome);
 
+
 }

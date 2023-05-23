@@ -42,20 +42,22 @@ public class MarcaController {
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body("ERRO:"+e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro: A marca já existe");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMarca(@PathVariable Long id) {
-        Optional<Marca> deletarId = marcaRepository.findById(id);
-        if (deletarId.isPresent()) {
-            marcaRepository.deleteById(id);
-            return ResponseEntity.ok("Apagado com sucesso");
+        Optional<Marca> marcaOptional = marcaRepository.findById(id);
+        if (marcaOptional.isPresent()) {
+            Marca marca = marcaOptional.get();
+            marcaService.deletar(marca);
+            return ResponseEntity.ok("Marca e modelos associados apagados com sucesso");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @PutMapping("/put/id/{id}")
     public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Marca atualizarId) {

@@ -2,17 +2,18 @@ package br.com.uniamerica.estacionamento.service;
 import br.com.uniamerica.estacionamento.Entity.Marca;
 import br.com.uniamerica.estacionamento.Entity.Modelo;
 import br.com.uniamerica.estacionamento.repository.MarcaRepository;
+import br.com.uniamerica.estacionamento.repository.ModeloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import java.util.List;
-import java.util.Optional;
-
 @Service
 public class MarcaService {
     @Autowired
     private MarcaRepository  marcaRepository;
+    @Autowired
+    ModeloRepository modeloRepository;
     public List<Marca> listartudo(){
         return marcaRepository.findAll();
     }
@@ -23,14 +24,10 @@ public class MarcaService {
         }
         int count = this.marcaRepository.countByNome(marca.getNome());
         if (count > 0) {
-            throw new RuntimeException("Error: marca já existe");
+            throw new RuntimeException("Erro: A marca já existe");
         }
         return this.marcaRepository.save(marca);
     }
-
-
-
-
     @Transactional(rollbackFor = Exception.class)
     public void   atualizar(Long id, Marca marca) {
         final Marca marcaBanco = this.marcaRepository.findById(marca.getId()).orElse(null);
@@ -43,34 +40,40 @@ public class MarcaService {
     }
 
 
+
+
     @Transactional(rollbackFor = Exception.class)
-    public void deletar (final Marca marca){
+    public void deletar(final Marca marca) {
         final Marca marcaBanco = this.marcaRepository.findById(marca.getId()).orElse(null);
 
         List<Modelo> modeloLista = this.marcaRepository.findModelo(marcaBanco);
 
-        if(modeloLista.isEmpty()){
+        if (modeloLista.isEmpty()) {
             this.marcaRepository.delete(marcaBanco);
             System.out.println("ola1");
-        }else{
-            marcaBanco.setAtivo(false);
-            System.out.println("ola2");
-            this.marcaRepository.save(marcaBanco);
-        }
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public void editar(Long id, Marca marca) {
-        final Optional<Marca> marcaOptional = this.marcaRepository.findById(marca.getId());
-        if (marcaOptional.isPresent()) {
-            Marca marcaBanco = marcaOptional.get();
-            Assert.isTrue(marcaBanco.getId().equals(id), "Error: ID da URL diferente do body");
-            marcaBanco.setNome(marca.getNome());
-            // Atualize outros atributos da marca se necessário
-            this.marcaRepository.save(marcaBanco);
         } else {
-            throw new RuntimeException("Não foi possível identificar o registro");
+            for (Modelo modelo : modeloLista) {
+                modelo.setMarca(null); // Remover a referência da marca no modelo
+                this.modeloRepository.delete(modelo);
+                System.out.println("Modelo apagado: " + modelo.getId());
+            }
+            this.marcaRepository.delete(marcaBanco);
+            System.out.println("ola2");
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
