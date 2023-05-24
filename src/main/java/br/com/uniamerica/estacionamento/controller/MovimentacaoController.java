@@ -1,7 +1,7 @@
 package br.com.uniamerica.estacionamento.controller;
 
 import br.com.uniamerica.estacionamento.Entity.Movimentacao;
-import br.com.uniamerica.estacionamento.Recibo;
+import br.com.uniamerica.estacionamento.Relatorio;
 import br.com.uniamerica.estacionamento.repository.MovimentacaoRepository;
 import br.com.uniamerica.estacionamento.service.MovimentacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,6 @@ public class MovimentacaoController {
     @GetMapping("/lista/id/{id}")
     public ResponseEntity<?> listaId(@PathVariable(value = "id") Long id){
         Movimentacao listarid = Repository.findById(id).orElse(null);
-        Recibo dale = this.Service.saida(id);
         return listarid == null
                 ? ResponseEntity.badRequest().body(" <<ERRO>>: valor nao encontrado.")
                 : ResponseEntity.ok(listarid);
@@ -64,15 +63,22 @@ public class MovimentacaoController {
         }
 
     }
-    @PutMapping("/saida/{id}")
-    public ResponseEntity<?> saida (@RequestParam("id")final Long id){
-        try{
-            Recibo dale = this.Service.saida(id);
-            return ResponseEntity.ok(dale);
-        }catch(RuntimeException e){
-            return ResponseEntity.badRequest().body("Error " + e.getMessage());
+    @PutMapping("/sair/{id}")
+    public ResponseEntity <?> sair (@PathVariable("id") final Long id) {
+        try {
+            Relatorio relatorio = this.Service.sair(id);
+            return ResponseEntity.ok(relatorio);
         }
+        catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().body("Error " + e.getCause().getCause().getMessage());
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.internalServerError().body("Error " + e.getMessage());
+        }
+
     }
+
+
     @PutMapping("/put/id/{id}")
     public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Movimentacao atualizarId) {
         try {

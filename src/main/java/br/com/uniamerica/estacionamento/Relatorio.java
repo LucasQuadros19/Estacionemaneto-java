@@ -8,10 +8,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Recibo {
+public class Relatorio {
 
-    @Getter
-    @Setter
+    @Getter @Setter
     private LocalDateTime entrada;
 
     @Getter @Setter
@@ -35,7 +34,7 @@ public class Recibo {
     @Getter @Setter
     private BigDecimal desconto;
 
-    public Recibo(LocalDateTime entrada, LocalDateTime saida, Condutor condutor, Veiculo veiculo, Integer horas, BigDecimal horasDesconto, BigDecimal valor, BigDecimal desconto) {
+    public Relatorio(LocalDateTime entrada, LocalDateTime saida, Condutor condutor, Veiculo veiculo, Integer horas, BigDecimal horasDesconto, BigDecimal valor, BigDecimal desconto) {
         this.entrada = entrada;
         this.saida = saida;
         this.condutor = condutor;
@@ -45,10 +44,4 @@ public class Recibo {
         this.valor = valor;
         this.desconto = desconto;
     }
-
-    public Recibo(){
-
-    }
-
-
 }

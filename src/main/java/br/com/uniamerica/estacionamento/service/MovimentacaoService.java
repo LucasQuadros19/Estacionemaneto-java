@@ -1,10 +1,11 @@
 package br.com.uniamerica.estacionamento.service;
 
 import br.com.uniamerica.estacionamento.Entity.*;
-import br.com.uniamerica.estacionamento.Recibo;
+import br.com.uniamerica.estacionamento.Relatorio;
 import br.com.uniamerica.estacionamento.repository.CondutorRepository;
 import br.com.uniamerica.estacionamento.repository.ConfiguracaoRepository;
 import br.com.uniamerica.estacionamento.repository.MovimentacaoRepository;
+import br.com.uniamerica.estacionamento.repository.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class MovimentacaoService {
     private ConfiguracaoRepository configuracaoRepository;
     @Autowired
     private CondutorRepository condutorRepository;
+    private VeiculoRepository veiculoRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public void cadastrar(final Movimentacao movimentacao){
@@ -54,62 +56,75 @@ public class MovimentacaoService {
 
     }
     @Transactional(rollbackFor = Exception.class)
-    public List abertas(){
-        return this.movimentacaoRepository.findSaidas();
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public Recibo saida(final Long id){
-        final Movimentacao movimentacaoBanco = this.movimentacaoRepository.findById(id).orElse(null);
+    public Relatorio sair(final Long id){
 
-        Assert.isTrue(movimentacaoBanco != null, "Error registro nao encontrado");
+        // Verifica se a movimentação existe
+        final Movimentacao movBanco = this.movimentacaoRepository.findById(id).orElse(null);
+        Assert.isTrue(movBanco != null, "Não foi possivel identificar o registro informado");
 
+        // Identifica o horário da saida e calcula o tempo entre os dois horários
+       final LocalDateTime saida =  LocalDateTime.now();
 
-        LocalDateTime saida = LocalDateTime.now();
+        Duration duracao = Duration.between(movBanco.getEntrada(), saida);
 
-        Duration duracao = Duration.between(movimentacaoBanco.getEntrada(), saida);
+        // Pega os valores de configuração
+        final Configuracao config = this.configuracaoRepository.findById(1L).orElse(null);
+        Assert.isTrue(config != null, "Configuracoes nao cadastradas");
 
-        Configuracao config = this.configuracaoRepository.findById(1L).orElse(null);
+        // Pega o desconto do cliente
+        final Condutor condutor = this.condutorRepository.findById(movBanco.getCondutor().getId()).orElse(null);
+        Assert.isTrue(condutor != null, "Condutor nao encontrado");
 
-        Condutor alguem = this.condutorRepository.findById(movimentacaoBanco.getCondutor().getId()).orElse(null);
+        // Seta saida e tempo
+        movBanco.setSaida(saida);
+        movBanco.setHoras(duracao.toHoursPart());
+        movBanco.setMinutos(duracao.toMinutesPart());
 
-        movimentacaoBanco.setSaida(saida);
-
-
+        // Calcula o preco de acordo com o tempo passado
         final BigDecimal horas = BigDecimal.valueOf(duracao.toHoursPart());
         final BigDecimal minutos = BigDecimal.valueOf(duracao.toMinutesPart()).divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_EVEN);
         BigDecimal preco = config.getValorHora().multiply(horas).add(config.getValorHora().multiply(minutos));
 
+        final BigDecimal tempoPago = condutor.getTempoPago() != null ? condutor.getTempoPago() : new BigDecimal(0);
 
-        if(config.isGerarDesconto()){
-            if(alguem.getTempoDesconto().compareTo(new BigDecimal(config.getTempoParaDesconto())) > 0){
-                System.out.println(alguem.getTempoDesconto().compareTo(new BigDecimal(config.getTempoParaDesconto())));
-                movimentacaoBanco.setValorDesconto(preco.subtract(config.getTempoDeDesconto()));
-            }else{
-                alguem.setTempoDesconto(horas.add(minutos));
-            }
-        }else{
-            alguem.setTempoDesconto(horas.add(minutos));
+        BigDecimal valor_desc;
+
+        if (tempoPago.compareTo(new BigDecimal(config.getTempoParaDesconto())) >= 0) {
+            valor_desc = config.getTempoDeDesconto();
+
+            movBanco.setValorDesconto(valor_desc);
+            condutor.setTempoPago(BigDecimal.ZERO);
+        }else {
+            valor_desc = BigDecimal.ZERO;
         }
 
-        Integer horasI = horas.intValue();
-        Integer minutosI = minutos.intValue();
+        BigDecimal valorTotal = preco.subtract(valor_desc);
+        movBanco.setValorTotal(valorTotal);
 
-        alguem.setTempoPago(preco);
+        movBanco.setValorHora(config.getValorHora());
+        movBanco.setValorHoraMulta(config.getValorHoraMulta());
 
-        movimentacaoBanco.setHoras(horasI);
-        movimentacaoBanco.setMinutos(minutosI);
-        movimentacaoBanco.setValorHora(preco);
+        if (config.isGerarDesconto()) {
+            condutor.setTempoPago(tempoPago.add(horas.add(minutos)));
+        }
 
-        this.movimentacaoRepository.save(movimentacaoBanco);
+        this.condutorRepository.save(condutor);
+        this.movimentacaoRepository.save(movBanco);
 
-        return new Recibo(movimentacaoBanco.getEntrada(),
-                movimentacaoBanco.getSaida(),
-                movimentacaoBanco.getCondutor(),
-                movimentacaoBanco.getVeiculo(),
-                movimentacaoBanco.getHoras(),
-                movimentacaoBanco.getCondutor().getTempoDesconto(),
-                movimentacaoBanco.getValorHora(),
-                movimentacaoBanco.getValorDesconto());
+        return new Relatorio(movBanco.getEntrada(), movBanco.getSaida(), movBanco.getCondutor(), movBanco.getVeiculo(), horas.intValue(),
+                tempoPago.setScale(0, RoundingMode.HALF_EVEN),
+                preco.subtract(valor_desc).setScale(2, RoundingMode.HALF_EVEN),
+                valor_desc.setScale(2, RoundingMode.HALF_EVEN));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deletar(final Long id){
+
+        final Movimentacao movBanco = this.movimentacaoRepository.findById(id).orElse(null);
+        Assert.isTrue(movBanco != null, "Registro não encontrado");
+
+        movBanco.setAtivo(false);
+        this.movimentacaoRepository.save(movBanco);
 
     }
 }
