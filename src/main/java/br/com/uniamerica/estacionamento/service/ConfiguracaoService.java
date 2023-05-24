@@ -40,7 +40,7 @@ public class ConfiguracaoService {
         final Configuracao marcaBanco = this.configuracaoRepository.findById(configuracao.getId()).orElse(null);
         Assert.isTrue(marcaBanco.getId().equals(id), "Error, id da URL diferente do body");
         validarCampos(configuracao);
-        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(configuracao.getId()), "Não foi possível identificar o registro");
+        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(configuracao.getId()), "nao identificado o registro informado");
         this.configuracaoRepository.save(configuracao);
     }
 

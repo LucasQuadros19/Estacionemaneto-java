@@ -31,7 +31,7 @@ public class MarcaService {
         final Marca marcaBanco = this.marcaRepository.findById(marca.getId()).orElse(null);
         Assert.isTrue(marcaBanco.getId().equals(id) ,"Error id da URL diferente do body");
 
-        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(marca.getId()),"nao foi possivel identificar o registro");
+        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(marca.getId()),"nao identificado o registro informado");
         this.marcaRepository.save(marca);
     }
     @Transactional(rollbackFor = Exception.class)

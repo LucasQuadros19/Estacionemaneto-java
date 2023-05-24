@@ -48,7 +48,7 @@ public class CondutorController {
         }
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteMarca(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         Optional<Condutor> deletarId = Repository.findById(id);
         if (deletarId.isPresent()) {
             Repository.deleteById(id);

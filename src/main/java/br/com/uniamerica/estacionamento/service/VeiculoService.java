@@ -38,9 +38,7 @@ public class VeiculoService {
         final Veiculo marcaBanco = this.Repository.findById(atualizar.getId()).orElse(null);
         Assert.isTrue(marcaBanco.getId().equals(id) ,"Error id da URL diferente do body");
 
-
-        // pq isso nao da ceto
-        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(atualizar.getId()),"nao foi possivel identificar o registro");
+        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(atualizar.getId()),"nao identificado o registro informado");
         this.Repository.save(atualizar);
     }
 

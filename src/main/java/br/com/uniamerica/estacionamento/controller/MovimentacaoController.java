@@ -1,6 +1,7 @@
 package br.com.uniamerica.estacionamento.controller;
 
 import br.com.uniamerica.estacionamento.Entity.Movimentacao;
+import br.com.uniamerica.estacionamento.Entity.Veiculo;
 import br.com.uniamerica.estacionamento.Relatorio;
 import br.com.uniamerica.estacionamento.repository.MovimentacaoRepository;
 import br.com.uniamerica.estacionamento.service.MovimentacaoService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/movimentacao")
@@ -53,16 +55,19 @@ public class MovimentacaoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete (@RequestParam("id") final  Long id){
-        final Movimentacao movimentacaoBanco = this.Repository.findById(id).orElse(null);
-        try{
-            this.Service.deletar(movimentacaoBanco);
-            return ResponseEntity.ok("Ativo(movimentacao) alterado para false");
-        }catch(RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error " + e.getMessage());
+    public ResponseEntity<String> deleteMarca(@PathVariable Long id) {
+        Optional<Movimentacao> optionalMovimentacao = Repository.findById(id);
+        if (optionalMovimentacao.isPresent()) {
+            Movimentacao movimentacao = optionalMovimentacao.get();
+            movimentacao.setAtivo(false);
+            Repository.save(movimentacao);
+            return ResponseEntity.ok("Marca inativada com sucesso");
+        } else {
+            return ResponseEntity.notFound().build();
         }
-
     }
+
+
     @PutMapping("/sair/{id}")
     public ResponseEntity <?> sair (@PathVariable("id") final Long id) {
         try {
@@ -77,8 +82,6 @@ public class MovimentacaoController {
         }
 
     }
-
-
     @PutMapping("/put/id/{id}")
     public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Movimentacao atualizarId) {
         try {

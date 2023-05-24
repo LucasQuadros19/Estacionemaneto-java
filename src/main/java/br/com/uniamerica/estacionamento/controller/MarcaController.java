@@ -50,7 +50,7 @@ public class MarcaController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteMarca(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         Optional<Marca> marcaOptional = marcaRepository.findById(id);
         if (marcaOptional.isPresent()) {
             Marca marca = marcaOptional.get();
