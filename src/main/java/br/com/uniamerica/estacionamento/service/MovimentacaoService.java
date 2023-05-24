@@ -44,12 +44,12 @@ public class MovimentacaoService {
         Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(atualizar.getId()),"nao identificado o registro informado");
         this.movimentacaoRepository.save(atualizar);
     }
-
     @Transactional(rollbackFor = Exception.class)
     public Relatorio sair(final Long id){
         final Movimentacao movBanco = this.movimentacaoRepository.findById(id).orElse(null);
         Assert.isTrue(movBanco != null, "nao identificado o registro informado");
-       final LocalDateTime saida =  LocalDateTime.now();
+        final LocalDateTime saida =  LocalDateTime.now();
+        // LocalDateTime saida = LocalDateTime.of(2023, 5, 1, 10, 30);
         Duration duracao = Duration.between(movBanco.getEntrada(), saida);
         final Configuracao config = this.configuracaoRepository.findById(1L).orElse(null);
         Assert.isTrue(config != null, "Configuracoes nao cadastradas");
@@ -58,10 +58,6 @@ public class MovimentacaoService {
         movBanco.setSaida(saida);
         movBanco.setHoras(duracao.toHoursPart());
         movBanco.setMinutos(duracao.toMinutesPart());
-
-
-
-
         final BigDecimal horas = BigDecimal.valueOf(duracao.toHoursPart());
         final BigDecimal minutos = BigDecimal.valueOf(duracao.toMinutesPart()).divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_EVEN);
         BigDecimal preco = config.getValorHora().multiply(horas).add(config.getValorHora().multiply(minutos));
@@ -69,7 +65,6 @@ public class MovimentacaoService {
         BigDecimal valor_desc;
         if (tempoPago.compareTo(new BigDecimal(config.getTempoParaDesconto())) >= 0) {
             valor_desc = config.getTempoDeDesconto();
-
             movBanco.setValorDesconto(valor_desc);
             condutor.setTempoPago(BigDecimal.ZERO);
         }else {
@@ -84,7 +79,6 @@ public class MovimentacaoService {
         }
         this.condutorRepository.save(condutor);
         this.movimentacaoRepository.save(movBanco);
-
         return new Relatorio(movBanco.getEntrada(), movBanco.getSaida(), movBanco.getCondutor(), movBanco.getVeiculo(), horas.intValue(),
                 tempoPago.setScale(0, RoundingMode.HALF_EVEN),
                 preco.subtract(valor_desc).setScale(2, RoundingMode.HALF_EVEN),
