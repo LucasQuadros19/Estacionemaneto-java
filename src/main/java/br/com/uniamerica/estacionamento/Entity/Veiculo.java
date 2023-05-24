@@ -21,9 +21,18 @@ public class Veiculo extends AbstractEntity {
     @Setter
     @Column(name="ano",nullable=false)
     private int ano;
+    @Enumerated(EnumType.STRING)
+    @Getter @Setter
+    @Column(name = "tipo", length = 10, nullable = false)
+    private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    @Getter @Setter
+    @Column(name = "cor", length = 20, nullable = false)
+    private Cor cor;
     @Getter
     @Setter
     @ManyToOne
     @JoinColumn(name="Veiculo_modelo",nullable=false)
     private Modelo modelo;
+
 }

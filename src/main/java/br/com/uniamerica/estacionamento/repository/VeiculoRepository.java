@@ -20,9 +20,6 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Long> {
     List<Veiculo> findByAtivo(boolean ativo);
 
 
-
-
-
     @Query("from Veiculo where ativo = true")
     public List<Veiculo> findByAtivos();
 

@@ -14,16 +14,15 @@ public class CondutorService {
     private CondutorRepository condutorRepository;
     @Transactional(rollbackFor =  Exception.class)
     public void cadastrar(final Condutor condutor){
-        Assert.isTrue(condutor.getNome() != null , "Error digite um numero");
-        Assert.isTrue(condutor.getTelefone() != null, "Error digite uma telefone");
+        Assert.notNull(condutor.getNome(), "Error, campo nome vazio");
+        Assert.notNull(condutor.getCpf(), "Error, campo cpf vazio");
+        Assert.notNull(condutor.getTelefone(), "Error, campo telefone vazio");
         Assert.isTrue(this.condutorRepository.findTelefonesCadastro(condutor.getTelefone()).isEmpty(),"Telefone ja existe");
         String regexTelefone = "\\+\\d{3}\\(\\d{2}\\)\\d{5}-\\d{4}";
         Assert.isTrue(condutor.getTelefone().matches(regexTelefone), "Mascara de telefone invalida");
         Assert.isTrue(this.condutorRepository.findCpfCadastro(condutor.getCpf()).isEmpty(),"Error CPF ja existe");
-        Assert.isTrue(condutor.getCpf() != null, "CPF, nao informado");
         String regexCpf = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$";
         Assert.isTrue(condutor.getCpf().matches(regexCpf), "Error cpf com mascara errada");
-
         this.condutorRepository.save(condutor);
     }
     public List<Condutor> listaCompleta() {

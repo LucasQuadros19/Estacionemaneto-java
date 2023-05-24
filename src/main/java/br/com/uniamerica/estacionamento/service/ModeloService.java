@@ -16,7 +16,8 @@ public class ModeloService {
     }
     @Transactional(rollbackFor = Exception.class)
     public Modelo cadastrar(Modelo cadastrar) {
-        Assert.isTrue(cadastrar.getNome() != null && !cadastrar.getNome().isEmpty(), "Error: nome vazio");
+
+        Assert.isTrue(cadastrar.getNome().length() < 30, "Error: limite máximo de caracteres (30)");
         int count = this.modeloRepository.countByNome(cadastrar.getNome());
         Assert.isTrue(count == 0, "Erro: A modelo já existe");
         return this.modeloRepository.save(cadastrar);

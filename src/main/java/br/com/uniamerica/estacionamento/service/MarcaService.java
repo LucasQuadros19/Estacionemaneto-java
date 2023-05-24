@@ -13,13 +13,15 @@ public class MarcaService {
     @Autowired
     private MarcaRepository  marcaRepository;
     @Autowired
-    ModeloRepository modeloRepository;
+    private ModeloRepository modeloRepository;
     public List<Marca> listartudo(){
         return marcaRepository.findAll();
     }
     @Transactional(rollbackFor = RuntimeException.class)
     public Marca cadastrar(Marca marca) {
-        Assert.isTrue(marca.getNome() != null && !marca.getNome().isEmpty(), "Error: nome vazio");
+        Assert.notNull(marca.getNome(), "Error, campo nome vazio");
+        Assert.isTrue(marca.getNome().length() < 20, "Error: limite máximo de caracteres (20)");
+
         int count = this.marcaRepository.countByNome(marca.getNome());
         Assert.isTrue(count == 0, "Erro: A marca já existe");
         return this.marcaRepository.save(marca);
@@ -29,15 +31,9 @@ public class MarcaService {
         final Marca marcaBanco = this.marcaRepository.findById(marca.getId()).orElse(null);
         Assert.isTrue(marcaBanco.getId().equals(id) ,"Error id da URL diferente do body");
 
-
-        // pq isso nao da ceto
         Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(marca.getId()),"nao foi possivel identificar o registro");
         this.marcaRepository.save(marca);
     }
-
-
-
-
     @Transactional(rollbackFor = Exception.class)
     public void deletar(final Marca marca) {
         final Marca marcaBanco = this.marcaRepository.findById(marca.getId()).orElse(null);

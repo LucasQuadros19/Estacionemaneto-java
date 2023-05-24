@@ -41,6 +41,8 @@ public class ModeloController {
             return ResponseEntity.ok("Cadastro feito com sucesso");
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body("ERRO:"+e.getMessage());
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("ERRO: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

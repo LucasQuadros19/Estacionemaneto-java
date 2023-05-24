@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Marca extends AbstractEntity {
     @Getter
     @Setter
-    @Column(name="marca",nullable=false)
+    @Column(name="marca",nullable=false,length=20)
     private String nome;
 
 }

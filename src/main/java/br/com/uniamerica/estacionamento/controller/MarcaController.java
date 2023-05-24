@@ -1,4 +1,5 @@
 package br.com.uniamerica.estacionamento.controller;
+import br.com.uniamerica.estacionamento.Entity.Configuracao;
 import br.com.uniamerica.estacionamento.Entity.Marca;
 import br.com.uniamerica.estacionamento.Entity.Modelo;
 import br.com.uniamerica.estacionamento.repository.MarcaRepository;
@@ -35,14 +36,16 @@ public class MarcaController {
         return ResponseEntity.ok(listarAtivo);
     }
     @PostMapping("/cadastrar")
-    public ResponseEntity<?> cadastrar(@RequestBody Marca cadastro){
-        try{
+    public ResponseEntity<?> cadastrar(@RequestBody Marca cadastro) {
+        try {
             this.marcaService.cadastrar(cadastro);
             return ResponseEntity.ok("Cadastro feito com sucesso");
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("ERRO: erro na integridade"+e.getMessage());
+            return ResponseEntity.badRequest().body("ERRO: Violação de integridade de dados");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("ERRO: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("ERRO: Ocorreu um erro durante o cadastro");
         }
     }
 
@@ -52,7 +55,7 @@ public class MarcaController {
         if (marcaOptional.isPresent()) {
             Marca marca = marcaOptional.get();
             marcaService.deletar(marca);
-            return ResponseEntity.ok("Marca e modelos associados apagados com sucesso");
+            return ResponseEntity.ok("Marca apagado com sucesso");
         } else {
             return ResponseEntity.notFound().build();
         }

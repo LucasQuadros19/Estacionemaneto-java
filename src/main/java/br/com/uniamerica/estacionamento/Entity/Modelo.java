@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Modelo extends AbstractEntity {
     @Getter
     @Setter
-    @Column(name="nome",nullable=false,length=100)
+    @Column(name="nome",nullable=false,length=30)
     private String nome;
     @Getter
     @Setter

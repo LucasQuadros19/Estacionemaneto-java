@@ -18,12 +18,18 @@ public class VeiculoService {
     private final String regexPlaca = "^[a-zA-Z]{4}-\\d{4}$";
     @Transactional(rollbackFor = Exception.class)
     public Veiculo cadastrar(Veiculo cadastrar) {
-        Assert.isTrue(cadastrar.getPlaca() != null && !cadastrar.getPlaca().isEmpty(), "Error: nome vazio");
+
         int count = this.Repository.countByplaca(cadastrar.getPlaca());
         Assert.isTrue(count == 0, "<Erro> A placa já existe");
         Assert.isTrue(cadastrar.getPlaca().matches(regexPlaca), "Error: A placa está errada");
         Assert.isTrue(cadastrar.getPlaca().length() < 10, "Error: Placa ultrapassou o limite máximo de caracteres (10)");
         Assert.isTrue(cadastrar.getAno() > 1990 && cadastrar.getAno() <= 2023, "Error: Ano errado");
+        Assert.notNull(cadastrar.getAno(), "Error, campo ano vazio");
+        Assert.notNull(cadastrar.getPlaca(), "Error, campo placa vazio");
+        Assert.notNull(cadastrar.getCor(), "Error, campo cor vazio");
+        Assert.notNull(cadastrar.getTipo(), "Error, campo tipo vazio");
+
+
         return this.Repository.save(cadastrar);
     }
 
