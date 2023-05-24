@@ -2,6 +2,7 @@ package br.com.uniamerica.estacionamento.repository;
 
 import br.com.uniamerica.estacionamento.Entity.Condutor;
 import br.com.uniamerica.estacionamento.Entity.Marca;
+import br.com.uniamerica.estacionamento.Entity.Movimentacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,8 @@ public interface CondutorRepository extends JpaRepository<Condutor, Long> {
 
     @Query("from Condutor where cpf = :cpf")
     public List<Condutor> findCpfCadastro(@Param("cpf")final String cpf);
+
+    @Query("from Movimentacao where condutor = :condutor")
+    public List<Movimentacao> findCondutor(@Param("condutor") final Condutor condutor);
+
 }

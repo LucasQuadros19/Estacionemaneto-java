@@ -1,6 +1,5 @@
 package br.com.uniamerica.estacionamento.controller;
 import br.com.uniamerica.estacionamento.Entity.Configuracao;
-import br.com.uniamerica.estacionamento.Entity.Modelo;
 import br.com.uniamerica.estacionamento.repository.ConfiguracaoRepository;
 import br.com.uniamerica.estacionamento.service.ConfiguracaoService;
 import org.springframework.beans.factory.annotation.Autowired;

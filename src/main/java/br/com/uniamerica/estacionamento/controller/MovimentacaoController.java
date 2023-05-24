@@ -1,11 +1,8 @@
 package br.com.uniamerica.estacionamento.controller;
 
-import br.com.uniamerica.estacionamento.Entity.Condutor;
 import br.com.uniamerica.estacionamento.Entity.Movimentacao;
-import br.com.uniamerica.estacionamento.Entity.Movimentacao;
-import br.com.uniamerica.estacionamento.repository.ModeloRepository;
+import br.com.uniamerica.estacionamento.Recibo;
 import br.com.uniamerica.estacionamento.repository.MovimentacaoRepository;
-import br.com.uniamerica.estacionamento.service.ModeloService;
 import br.com.uniamerica.estacionamento.service.MovimentacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,22 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/movimentacao")
 public class MovimentacaoController {
-
-
-
-
-
     @Autowired
     private  MovimentacaoService Service;
-
     @Autowired
     private MovimentacaoRepository Repository;
-
     @GetMapping("/lista")
     public ResponseEntity<List<Movimentacao>> lista(){
         List<Movimentacao> listartud = Service.listaCompleta();
@@ -63,28 +52,27 @@ public class MovimentacaoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMarca(@PathVariable Long id){
-        Optional<Movimentacao> deletarId = Repository.findById(id);
-        if (deletarId.isPresent()) {
-            Repository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> delete (@RequestParam("id") final  Long id){
+        final Movimentacao movimentacaoBanco = this.Repository.findById(id).orElse(null);
+        try{
+            this.Service.deletar(movimentacaoBanco);
+            return ResponseEntity.ok("Ativo(movimentacao) alterado para false");
+        }catch(RuntimeException e){
+            return ResponseEntity.internalServerError().body("Error " + e.getMessage());
+        }
+
+    }
+    @PutMapping("/saida")
+    public ResponseEntity<?> saida (@RequestParam("id")final Long id){
+        try{
+            Recibo dale = this.Service.saida(id);
+            return ResponseEntity.ok(dale);
+        }catch(RuntimeException e){
+            return ResponseEntity.badRequest().body("Error " + e.getMessage());
         }
     }
-    @PutMapping("/delete/{id}")
-    public ResponseEntity<?> desativar(
-            @PathVariable Long idCondutor
-    ){
-        this.Service.desativar(idCondutor);
-        return ResponseEntity.ok().body("desativado com sucesso!");
-    }
-
-    @PutMapping("/put/{id}")
-    public ResponseEntity<?> atualizar(
-            @PathVariable Long id,
-            @RequestBody Movimentacao atualizarId
-    ) {
+    @PutMapping("/put/id/{id}")
+    public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Movimentacao atualizarId) {
         try {
             this.Service.atualizar(id, atualizarId);
             return ResponseEntity.ok().body(" atualizado com sucesso!");
@@ -92,7 +80,6 @@ public class MovimentacaoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 
 
 }

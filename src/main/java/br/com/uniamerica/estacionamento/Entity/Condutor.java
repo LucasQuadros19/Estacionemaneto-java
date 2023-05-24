@@ -7,6 +7,7 @@ import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 @Entity
@@ -26,10 +27,10 @@ public class Condutor extends AbstractEntity {
     private String telefone;
     @Getter @Setter
     @Column(name="tempo_pago")
-    private LocalTime tempoPago;
+    private BigDecimal tempoPago;
     @Getter @Setter
     @Column(name="tempo_gasto")
-    private LocalTime tempoDesconto;
+    private BigDecimal tempoDesconto;
 
 
 }
