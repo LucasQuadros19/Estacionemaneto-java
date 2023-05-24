@@ -22,12 +22,14 @@ public class MovimentacaoController {
     @GetMapping("/lista")
     public ResponseEntity<List<Movimentacao>> lista(){
         List<Movimentacao> listartud = Service.listaCompleta();
+
         return ResponseEntity.ok(listartud);
     }
 
     @GetMapping("/lista/id/{id}")
     public ResponseEntity<?> listaId(@PathVariable(value = "id") Long id){
         Movimentacao listarid = Repository.findById(id).orElse(null);
+        Recibo dale = this.Service.saida(id);
         return listarid == null
                 ? ResponseEntity.badRequest().body(" <<ERRO>>: valor nao encontrado.")
                 : ResponseEntity.ok(listarid);
@@ -62,7 +64,7 @@ public class MovimentacaoController {
         }
 
     }
-    @PutMapping("/saida")
+    @PutMapping("/saida/{id}")
     public ResponseEntity<?> saida (@RequestParam("id")final Long id){
         try{
             Recibo dale = this.Service.saida(id);

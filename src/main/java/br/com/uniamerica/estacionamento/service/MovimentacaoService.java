@@ -57,36 +57,12 @@ public class MovimentacaoService {
     public List abertas(){
         return this.movimentacaoRepository.findSaidas();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Transactional(rollbackFor = Exception.class)
     public Recibo saida(final Long id){
         final Movimentacao movimentacaoBanco = this.movimentacaoRepository.findById(id).orElse(null);
 
         Assert.isTrue(movimentacaoBanco != null, "Error registro nao encontrado");
 
-        movimentacaoBanco.setAtivo(false);
 
         LocalDateTime saida = LocalDateTime.now();
 
@@ -97,7 +73,7 @@ public class MovimentacaoService {
         Condutor alguem = this.condutorRepository.findById(movimentacaoBanco.getCondutor().getId()).orElse(null);
 
         movimentacaoBanco.setSaida(saida);
-        //movimentacaoBanco.setHoras(horas);
+
 
         final BigDecimal horas = BigDecimal.valueOf(duracao.toHoursPart());
         final BigDecimal minutos = BigDecimal.valueOf(duracao.toMinutesPart()).divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_EVEN);

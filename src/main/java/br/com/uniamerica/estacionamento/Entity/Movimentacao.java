@@ -35,44 +35,50 @@ public class Movimentacao extends AbstractEntity{
     private LocalDateTime entrada;
     @Getter
     @Setter
-    @Column(name="saida",nullable=false)
+    @Column(name="saida")
     private LocalDateTime saida;
     @Getter
     @Setter
-    @Column(name="horas",nullable=false)
+    @Column(name="horas")
     private Integer horas;
     @Getter
     @Setter
-    @Column(name = "minutos", nullable = false)
+    @Column(name = "minutos")
     private Integer minutos;
     @Getter
     @Setter
-    @Column(name="tempo_desconto",nullable=false)
-    private LocalTime tempoDesconto;
+    @Column(name="tempo_desconto")
+    private Integer tempoDesconto;
     @Getter
     @Setter
-    @Column(name="tempo_multa",nullable=false)
+    @Column(name="tempo_multa")
     private LocalTime tempoMulta;
     @Getter
     @Setter
-    @Column(name="valor_desconto",nullable=false)
+    @Column(name="valor_desconto")
     private BigDecimal valorDesconto;
     @Getter
     @Setter
-    @Column(name="valor_multa",nullable=false)
+    @Column(name="valor_multa")
     private BigDecimal valorMulta;
     @Getter
     @Setter
-    @Column(name="valor_total",nullable=false)
+    @Column(name="valor_total")
     private BigDecimal valorTotal;
     @Getter
     @Setter
-    @Column(name="valor_hora",nullable=false)
+    @Column(name="valor_hora")
     private BigDecimal valorHora;
     @Getter
     @Setter
-    @Column(name="valor_hora_multa",nullable=false)
+    @Column(name="valor_hora_multa")
     private BigDecimal valorHoraMulta;
 
+    @PrePersist
+    private void prePersiste(){
+        setCadastro(LocalDateTime.now());
+        this.setEntrada(LocalDateTime.now());
+        this.setTempoDesconto(0);
+    }
 
 }
