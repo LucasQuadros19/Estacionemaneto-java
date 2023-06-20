@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 @Controller
 @RequestMapping (value = "/api/marca")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MarcaController {
     @Autowired
     private MarcaService marcaService;

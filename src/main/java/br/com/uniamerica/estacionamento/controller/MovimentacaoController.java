@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/movimentacao")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MovimentacaoController {
     @Autowired
     private  MovimentacaoService Service;
