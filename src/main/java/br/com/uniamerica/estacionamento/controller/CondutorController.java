@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/condutor")
-@CrossOrigin(origins = "http://localhost:3000")
+
 public class CondutorController {
     @Autowired
     private CondutorService Service;

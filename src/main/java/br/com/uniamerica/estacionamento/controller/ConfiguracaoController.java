@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/configuracao")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ConfiguracaoController {
     @Autowired
     private ConfiguracaoService Service;

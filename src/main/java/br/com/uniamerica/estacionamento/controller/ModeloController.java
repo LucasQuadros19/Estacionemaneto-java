@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 @Controller
 @RequestMapping (value = "/api/modelo")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ModeloController {
     @Autowired
     private ModeloService Service;
