@@ -57,7 +57,7 @@ public class VeiculoController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/put/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Veiculo atualizarId) {
         try {
             this.Service.atualizar(id, atualizarId);

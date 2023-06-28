@@ -58,7 +58,7 @@ public class ModeloController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/put/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Modelo atualizarId) {
         try {
             this.Service.atualizar(id, atualizarId);

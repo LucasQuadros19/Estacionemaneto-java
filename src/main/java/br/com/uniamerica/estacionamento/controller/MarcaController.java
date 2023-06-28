@@ -1,4 +1,5 @@
 package br.com.uniamerica.estacionamento.controller;
+
 import br.com.uniamerica.estacionamento.Entity.Configuracao;
 import br.com.uniamerica.estacionamento.Entity.Marca;
 import br.com.uniamerica.estacionamento.Entity.Modelo;
@@ -7,12 +8,13 @@ import br.com.uniamerica.estacionamento.service.MarcaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
-@Controller
-@RequestMapping (value = "/api/marca")
+
+@RestController
+@RequestMapping(value = "/api/marca")
 public class MarcaController {
     @Autowired
     private MarcaService marcaService;

@@ -61,7 +61,7 @@ public class MovimentacaoController {
             Movimentacao movimentacao = optionalMovimentacao.get();
             movimentacao.setAtivo(false);
             Repository.save(movimentacao);
-            return ResponseEntity.ok("Marca inativada com sucesso");
+            return ResponseEntity.ok("movimentacao inativada com sucesso");
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -82,7 +82,7 @@ public class MovimentacaoController {
         }
 
     }
-    @PutMapping("/put/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Movimentacao atualizarId) {
         try {
             this.Service.atualizar(id, atualizarId);
